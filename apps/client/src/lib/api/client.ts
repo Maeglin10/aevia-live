@@ -7,6 +7,9 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Required so the browser sends and receives the httpOnly accessToken cookie
+  // on cross-origin requests to the API (dual-track alongside localStorage).
+  withCredentials: true,
 });
 
 // Request interceptor for API calls
