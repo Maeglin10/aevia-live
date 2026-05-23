@@ -42,7 +42,7 @@ export const metadata: Metadata = {
       "Premium live streaming and creator monetization: tips, subscriptions, exclusive content. Ultra-low latency, no middlemen.",
     images: [
       {
-        url: "/og.png",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "AeviaLive — Live Streaming Platform for Creators",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: "AeviaLive — Live Streaming & Creator Monetization Platform",
     description:
       "Premium live streaming and creator monetization: tips, subscriptions, exclusive content. Ultra-low latency, no middlemen.",
-    images: ["/og.png"],
+    images: ["/api/og"],
     creator: "@valentinmilliand",
   },
   robots: {
