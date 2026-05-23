@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { CookieBanner } from "@/components/CookieBanner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -106,6 +107,7 @@ export default function RootLayout({
           <Providers>
             {children}
           </Providers>
+          <CookieBanner />
         </ErrorBoundary>
       </body>
     </html>
