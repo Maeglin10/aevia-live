@@ -48,6 +48,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (data: LoginDto) => {
     const res = await authAdapter.login(data);
     if (typeof window !== 'undefined') {
+      // TODO(security-HAUT): JWTs in localStorage are vulnerable to XSS — any script on the page
+      // can exfiltrate them. Recommended migration to httpOnly cookies:
+      //   Backend: return Set-Cookie headers (httpOnly, secure, sameSite=strict) from POST /auth/login
+      //   and POST /auth/refresh instead of JSON tokens.
+      //   Frontend: remove all localStorage.setItem/getItem('access_token'/'refresh_token') calls.
+      //   Add credentials: 'include' to all fetch/axios requests.
+      //   Affected files: useAuth.tsx, lib/api.ts, lib/api/client.ts, hooks/useSocket.ts,
+      //   hooks/useChat.ts, components/creator/CreatorProfileClient.tsx, components/live/LiveClient.tsx
       localStorage.setItem('access_token', res.accessToken);
       localStorage.setItem('refresh_token', res.refreshToken);
     }
@@ -58,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (data: RegisterDto) => {
     const res = await authAdapter.register(data);
     if (typeof window !== 'undefined') {
+      // TODO(security-HAUT): see login() comment above for httpOnly cookie migration plan
       localStorage.setItem('access_token', res.accessToken);
       localStorage.setItem('refresh_token', res.refreshToken);
     }

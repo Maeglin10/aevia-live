@@ -63,7 +63,11 @@ export class LiveController {
 
   private assertWebhookSecret(token?: string, headerSecret?: string) {
     const expected = process.env.STREAM_WEBHOOK_SECRET;
-    if (!expected) return;
+    // SECURITY(MOYEN): previously `if (!expected) return` allowed unauthenticated access when
+    // STREAM_WEBHOOK_SECRET was not set. Now we fail-closed: missing env var = always reject.
+    if (!expected) {
+      throw new ForbiddenException('Stream webhook secret is not configured on the server');
+    }
     const provided = headerSecret || token;
     if (!provided || provided !== expected) {
       throw new ForbiddenException('Invalid stream webhook secret');

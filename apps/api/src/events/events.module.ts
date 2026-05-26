@@ -5,7 +5,8 @@ import { EventsController } from './events.controller';
 import { NotificationsGateway } from './notifications.gateway';
 
 @Module({
-  imports: [JwtModule.register({ secret: process.env.JWT_SECRET || 'dev_secret' })],
+  // SECURITY: no fallback — startup validation in main.ts ensures JWT_SECRET is set
+  imports: [JwtModule.register({ secret: process.env.JWT_SECRET })],
   providers: [EventsService, NotificationsGateway],
   controllers: [EventsController],
   exports: [NotificationsGateway],

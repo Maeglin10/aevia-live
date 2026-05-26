@@ -76,8 +76,20 @@ async function bootstrap() {
   app.use(json());
 
   app.use(helmet());
+
+  // SECURITY: restrict CORS to known frontend origins; wildcard '*' is blocked in prod.
+  // Set FRONTEND_URL (comma-separated for multiple) in your environment.
+  const rawOrigins = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const allowedOrigins = rawOrigins.split(',').map((o) => o.trim());
   app.enableCors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: (origin, callback) => {
+      // Allow server-to-server (no Origin header) or explicitly whitelisted origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'), false);
+      }
+    },
     credentials: true,
   });
 

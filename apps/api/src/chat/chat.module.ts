@@ -9,7 +9,8 @@ import { JobsModule } from '../jobs/jobs.module';
   imports: [
     LiveModule,
     JobsModule,
-    JwtModule.register({ secret: process.env.JWT_SECRET || 'dev_secret' }),
+    // SECURITY: no fallback — startup validation in main.ts ensures JWT_SECRET is set
+    JwtModule.register({ secret: process.env.JWT_SECRET }),
   ],
   providers: [ChatGateway, ChatService],
   exports: [ChatService],

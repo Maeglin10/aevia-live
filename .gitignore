@@ -12,3 +12,8 @@ coverage/
 .vscode/
 *.tsbuildinfo
 pnpm-debug.log*
+
+# Test video file
+test.mp4
+*.mp4
+

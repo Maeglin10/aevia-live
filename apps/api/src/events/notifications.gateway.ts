@@ -19,7 +19,16 @@ export interface NotificationEvent {
   createdAt: string;
 }
 
-@WebSocketGateway({ namespace: '/notifications', cors: { origin: '*' } })
+// SECURITY: restrict WS CORS to allowed frontend origin(s) — same list as HTTP CORS
+@WebSocketGateway({
+  namespace: '/notifications',
+  cors: {
+    origin: (process.env.FRONTEND_URL || 'http://localhost:3000')
+      .split(',')
+      .map((o) => o.trim()),
+    credentials: true,
+  },
+})
 export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleDestroy {
   @WebSocketServer()
   server!: Server;
@@ -69,8 +78,9 @@ export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisco
     }
 
     try {
+      // SECURITY: no fallback — startup validation ensures JWT_SECRET is set
       const payload = this.jwtService.verify<{ sub: string }>(token, {
-        secret: process.env.JWT_SECRET || 'dev_secret',
+        secret: process.env.JWT_SECRET as string,
       });
       const activeBan = await this.prisma.ban.findFirst({
         where: {

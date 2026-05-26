@@ -11,7 +11,8 @@ import { GoogleStrategy } from './strategies/google.strategy';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'dev_secret',
+      // SECURITY: no fallback — startup validation in main.ts ensures JWT_SECRET is set
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: (process.env.JWT_EXPIRATION || '12h') as any },
     }),
     JobsModule,
